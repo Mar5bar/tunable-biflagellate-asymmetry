@@ -1,3 +1,5 @@
+addpath(genpath('../../common'))
+
 % Make videos?
 videos = false;
 

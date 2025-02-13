@@ -1,3 +1,4 @@
+addpath(genpath('../common'))
 % Loop through all the .csv files in the ./data directory. For each file, load in the data, and compute the curvature.
 
 % Get a list of all the .csv files in the ./data directory whose name ends with 'filtered'.
