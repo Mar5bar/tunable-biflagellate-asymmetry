@@ -1,3 +1,5 @@
+addpath(genpath('../common'))
+
 % Define parameters.
 params = struct();
 A_1 = 1; params.A_1 = A_1; % base amplitude of first flagellum

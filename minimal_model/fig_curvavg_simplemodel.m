@@ -1,3 +1,5 @@
+addpath(genpath('../common'))
+
 % Figure for curvature model. 
 
 % Define parameters.
