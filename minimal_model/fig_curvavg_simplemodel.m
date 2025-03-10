@@ -70,10 +70,10 @@ hold on
 
 col = colormap(othercolor('Paired6',length(f_var)));
 
-plot(k_var,(k_var-1)./(k_var+1),'k:','LineWidth',1)
+plot(k_var,((k_var(1)+1)/(k_var(1)-1))*(k_var-1)./(k_var+1),'k:','LineWidth',1)
 
 for i = 1:length(f_var)
-    plot(k_var,1./radii(i,:),'+','Color',col(i,:),'LineWidth',2)
+    plot(k_var,radii(i,1)./radii(i,:),'+','Color',col(i,:),'LineWidth',2)
 end
 
 % axis equal tight
