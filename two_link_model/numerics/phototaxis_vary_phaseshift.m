@@ -1,5 +1,5 @@
 % Make videos?
-videos = true;
+videos = false;
 
 % We'll run through beats where we alter the frequency of one of the flagella.
 flagLength = 1e-5; % Flagellum length of 10 micrometres.
@@ -36,16 +36,44 @@ plot(alphaFun(tt),betaFun(tt))
 %%
 
 % Make a nice video to show what's happening over a few beats.
-ts = linspace(0,30,1e4);
+ts = linspace(0,10,1e4);
 figure(2);clf;
-[positions, phis] = solve_problem(params,init,ts);
+[positions, phis, contact_forces] = solve_problem(params,init,ts);
 if videos
-    make_video(positions, phis, ts, params, 30, 1, 'videos/normal_swimming', true);
+    make_video(positions, phis, ts, params, 30, 1, 'normal_swimming', true);
 end
+
+
+figure(1);clf;
+plot(positions(:,1),positions(:,2));
+axis equal
+
+figure(2);clf;
+plot(ts,phis)
+
+figure(3);clf;
+plot(ts(1:end-1),contact_forces(1,:));
+hold on
+plot(ts(1:end-1),contact_forces(2,:));
+plot(ts(1:end-1),contact_forces(3,:));
+plot(ts(1:end-1),-contact_forces(4,:));
+
+F1 = sqrt(contact_forces(1,:).^2+contact_forces(2,:).^2);
+F2 = sqrt(contact_forces(3,:).^2+contact_forces(4,:).^2);
+figure(5);clf;
+plot(ts(1:end-1),F1)
+hold on
+plot(ts(1:end-1),F2)
+
+figure(4);clf;
+plot(ts(1:end-1),abs(F1-F2));
+
+
+%%
 
 % Simulate for a long time to see differences in messy trajectories.
 ts = linspace(0,10,1e4);
-phaseShifts = [0.1 0.2 0.5];
+phaseShifts = [0.06];
 allPositions = cell(length(phaseShifts),1);
 allPhis = cell(length(phaseShifts),1);
 for ind = 1 : length(phaseShifts)
@@ -55,15 +83,44 @@ for ind = 1 : length(phaseShifts)
     params.alphas = @(t) [alphaFun(t); -alphaFun(t+phaseShift)];
     params.betas = @(t) [betaFun(t); -betaFun(t+phaseShift)];
 
-    [positions, phis] = solve_problem(params,init,ts);
+    [positions, phis, contact_forces] = solve_problem(params,init,ts);
     % Save the positions.
     allPositions{ind} = positions;
     allPhis{ind} = phis;
 
     if videos
-        make_video(positions, phis, ts, params, 30, 1, ['videos/PS',num2str(phaseShift)], true);
+        make_video(positions, phis, ts, params, 30, 1, ['PS',num2str(phaseShift)], true);
     end
+
+    figure(1);clf;
+    plot(positions(:,1),positions(:,2));
+    axis equal
+    
+    figure(2);clf;
+    plot(ts,phis)
+    figure(3);clf;
+    plot(ts(1:end-1),contact_forces(1,:));
+    hold on
+    plot(ts(1:end-1),contact_forces(2,:));
+
+    figure(6);clf;
+    plot(ts(1:end-1),contact_forces(3,:));
+    hold on 
+    plot(ts(1:end-1),-contact_forces(4,:));
+    
+    F1 = sqrt(contact_forces(1,:).^2+contact_forces(2,:).^2);
+    F2 = sqrt(contact_forces(3,:).^2+contact_forces(4,:).^2);
+    figure(5);clf;
+    plot(ts(1:end-1),F1)
+    hold on
+    plot(ts(1:end-1),F2)
+    
+    figure(4);clf;
+    plot(ts(1:end-1),abs(F1-F2));
+    break
 end
+
+
 
 %%
 
@@ -88,18 +145,18 @@ axis equal
 % Linear regression on the phi dynamics to get the average angular
 % velocity.
 
-% phidotAvg = zeros(length(phaseShifts),1);
-% for ind = 1 : length(phaseShifts)
-%     P = polyfit(ts,allPhis{ind},1);
-%     phidotAvg(ind) = P(1);
-% end
-% 
-% figure(3);clf;
-% box on
-% %P = polyfit(phaseShifts,phidotAvg,1);
-% plot(phaseShifts,phidotAvg,'Color','black','LineWidth',2)
-% xlabel('Phase Shifts')
-% ylabel('Average angular speed')
+phidotAvg = zeros(length(phaseShifts),1);
+for ind = 1 : length(phaseShifts)
+    P = polyfit(ts,allPhis{ind},1);
+    phidotAvg(ind) = P(1);
+end
+
+figure(3);clf;
+box on
+%P = polyfit(phaseShifts,phidotAvg,1);
+plot(phaseShifts,phidotAvg,'Color','black','LineWidth',2)
+xlabel('Phase Shifts')
+ylabel('Average angular speed')
 % 
 % 
 % % Fit circles to get the radius of curvature as a function of frequency.

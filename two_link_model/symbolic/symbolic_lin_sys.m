@@ -1,4 +1,5 @@
 addpath(genpath('.'))
+addpath(genpath('helpers'))
 
 % Fixed parameters.
 syms nx1 ny1 nz1 tx1 ty1 tz1 bx1 by1 bz1 real

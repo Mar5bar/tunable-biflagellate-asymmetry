@@ -1,4 +1,4 @@
-function [positions, phis] = solve_problem(params,init,ts)
+function [positions, phis, contact_forces] = solve_problem(params,init,ts)
     if nargin < 1
         params = struct();
         params.mu = 1;
@@ -27,6 +27,19 @@ function [positions, phis] = solve_problem(params,init,ts)
     [ts, sols] = ode15s(f,ts,init,opts);
     positions = sols(:,1:2);
     phis = sols(:,3);
+
+    % Recalculate the forces at cilia attachment points from the
+    % solution.
+    contact_forces = zeros(4,length(ts)-1);
+    velocities = (sols(2:end,:) - sols(1:end-1,:)) / (ts(2) - ts(1));
+    for i = 1:length(ts)-1
+        shape = [params.alphas(ts(i));params.betas(ts(i))];
+        alphadot = diffByT(params.alphas, ts(i));
+        betadot = diffByT(params.betas, ts(i));
+        shape_velocities = [alphadot;betadot];
+        contact_forces(:,i) = compute_contact_forces(phis(i),params.phis,shape,velocities(i,:),shape_velocities,params)';
+    end
+
 end
 
 function dy = ode_fun(t,y,params)

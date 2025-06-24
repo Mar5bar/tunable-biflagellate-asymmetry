@@ -9,9 +9,9 @@ eta_r = 1/A_1; params.eta_r = eta_r;% rotation coefficient
 k_1 = 1; params.k_1 = k_1; % frequency of first flagellum
 k_2 = 1; params.k_2 = k_2; % frequency of second flagellum
 f = @(t) 0.9+0.1*cos(1*t); params.f = f;% periodic activation function
-g = @(t) f(t);%7/11+1.4*sin(2.4*t); 
+g = @(t) f(t)-0.01*sin(t)^2;%7/11+1.4*sin(2.4*t); 
 params.g = g;% different activation function for second flagellum
-phi = 0.5; params.phi = phi; % phase shift between both flagella
+phi = 0; params.phi = phi; % phase shift between both flagella
 
 % ODE conditions setup.
 init = [0;0;0];

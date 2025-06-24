@@ -1,18 +1,19 @@
 % Solve the intermediate model and plot the trajectory.
 
-asymmetry_type = "amplitude"; alpha = 1.1;
+% asymmetry_type = "amplitude"; alpha = 1.1;
 % asymmetry_type = "frequency"; k2 = 1.1;
-% asymmetry_type = "phase"; phi = pi;
+asymmetry_type = "phase"; phi = 0.3;
 
 % Specify the system.
-J = @(t) sin(t);
+J = @(t) sin(t)+0.5*cos(2*t);
+J2 = @(t) J(t);
 k1 = 1;
 A1 = 1;
 A2 = 1;
 B1 = 1;
 B2 = 1;
 
-T = 1e4;
+T = 2e3;
 mu = 1;
 radius = 1;
 psi = pi/6;
@@ -30,8 +31,8 @@ switch asymmetry_type
         f21 = @(t) k2*A1 + k2*B1*J(k2*t);
         f22 = @(t) k2*A2 + k2*B2*J(k2*t);
     case "phase"
-        f21 = @(t) k1*A1 + k1*B1*J(k1*t + phi);
-        f22 = @(t) k1*A2 + k1*B2*J(k1*t + phi);
+        f21 = @(t) k1*A1 + k1*B1*J2(k1*t + phi);
+        f22 = @(t) k1*A2 + k1*B2*J2(k1*t + phi);
     otherwise
         error("Invalid asymmetry type.");
 end
@@ -46,19 +47,19 @@ params.mu = mu;
 params.psi = psi;
 
 % Solve the ODE system.
-ts = linspace(0,T,1e3);
+ts = linspace(0,T,1e4);
 z0 = [0;0;0];
-[t,z] = ode15s(@(t,z) ode_rhs(t,z,params), ts, z0);
+opts = odeset('AbsTol',1e-10,'RelTol',1e-10);
+[t,z] = ode15s(@(t,z) ode_rhs(t,z,params), ts, z0, opts);
 x = z(:,1);
 y = z(:,2);
 theta = z(:,3);
 
+figure(1);clf;
 plot(x,y);
-xlabel('$x$');
-ylabel('$y$');
+xlabel('$x$','Interpreter','latex');
+ylabel('$y$','Interpreter','latex');
 axis equal
-
-
 
 function dz = ode_rhs(t, z, params)
     f11 = params.f11;
