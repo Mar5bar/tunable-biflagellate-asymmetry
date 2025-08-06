@@ -29,15 +29,15 @@ params.betas = @(t) betaFun(t) * [1;-1];
 init = [0;0;0];
 
 % Make a nice video to show what's happening over a few beats.
-ts = linspace(0,50,1e4);
+ts = linspace(0,50,5e4);
 [positions, phis] = solve_problem(params,init,ts);
 if videos
-    make_video(positions, phis, ts, params, 30, 1, 'videos/normal_swimming', true);
+    make_video(positions, phis, ts, params, 30, 1, 'videos/normal_swimming', true, false);
 end
 
 % Simulate for a long time to see differences in messy trajectories.
-ts = linspace(0,10,1e4);
-freqMultipliers = linspace(1,5,21);
+ts = linspace(0,50,1e4);
+freqMultipliers = 1.1:0.1:5;
 allPositions = cell(length(freqMultipliers),1);
 allPhis = cell(length(freqMultipliers),1);
 for ind = 1 : length(freqMultipliers)
@@ -53,11 +53,12 @@ for ind = 1 : length(freqMultipliers)
     allPhis{ind} = phis;
 
     if videos
-        make_video(positions, phis, ts, params, 30, 1, ['videos/freqMultiplier',num2str(freqMultiplier)], true);
+        make_video(positions, phis, ts, params, 30, 1, ['videos/freqMultiplier',num2str(freqMultiplier)], true, false);
     end
 end
 
 figure
+font_size = 20;
 hold on
 box on
 colororder(viridis(length(freqMultipliers)));
@@ -73,7 +74,7 @@ caxis([min(freqMultipliers), max(freqMultipliers)])
 xlabel('$x$ (m)','Interpreter','latex')
 ylabel('$y$ (m)','Interpreter','latex')
 axis equal
-exportgraphics(gcf,'trajectory_with_frequency_multiplier.png','Resolution',400)
+exportgraphics(gcf,'trajectory_with_frequency_multiplier.pdf')
 
 % Fit circles to get the radius of curvature as a function of frequency.
 radii = zeros(length(freqMultipliers),1);
@@ -82,10 +83,24 @@ for ind = 1 : length(freqMultipliers)
     radii(ind) = par(3);
 end
 figure
+set(gcf, 'Position',  [611,895,500,400])
+set(gcf,'color','w');
+hold on
 box on
-plot(freqMultipliers,1./radii,'Color','black','LineWidth',2)
-xlabel('Frequency multiplier')
-ylabel('Curvature (1/m)')
-exportgraphics(gcf,'curvature_with_frequency_multiplier.png','Resolution',400)
+plot(freqMultipliers,radii(1)./radii,'+','Color','black','LineWidth',2)
+xlabel('$k_R / k_L$','FontSize',font_size,'Interpreter','latex');
+ylabel('$\kappa$','FontSize',font_size,'Interpreter','latex');
+set(gca,'TickLabelInterpreter','latex');   
+set(gca,'FontSize',font_size);
+
+fitfun = fittype(@(a,x) a * (x+1)./(x-1))
+[fitted_curve, gof] = fit(freqMultipliers', radii(1)./radii, fitfun, 'StartPoint', 1);
+a = coeffvalues(fitted_curve);
+
+plot(freqMultipliers,a*((freqMultipliers(1)+1)/(freqMultipliers(1)-1))*(freqMultipliers-1)./(freqMultipliers+1),'k:','LineWidth',1)
+ylim([0,15])
+grid on
+legend({'Simulation','Scaling law'},'location','southeast')
+exportgraphics(gcf,'curvature_with_frequency_multiplier.pdf')
 
 save("output.mat")
