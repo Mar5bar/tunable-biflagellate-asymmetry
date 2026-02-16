@@ -82,14 +82,15 @@ end
     for i = 1:min(6,length(phaseShifts))
         nexttile(2*i-1);
         F = allForces{i};
-        plot(ts(1:end-1),F(1,:),'b');
+        % plot(ts(1:end-1),F(1,:),'b');
         hold on
-        plot(ts(1:end-1),F(3,:),'r');
+        plot(ts(1:end-1),F(1,:).^2 + F(2,:).^2,'g');
+        plot(ts(1:end-1),F(3,:).^2 + F(4,:).^2,'black');
     
         nexttile(2*i);
-        plot(ts(1:end-1),F(2,:),'b');
+        % plot(ts(1:end-1),F(2,:),'b');
         hold on
-        plot(ts(1:end-1),-F(4,:),'r');
+        % plot(ts(1:end-1),-F(4,:),'r');
     end
 
 

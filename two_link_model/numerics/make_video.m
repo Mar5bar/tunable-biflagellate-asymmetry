@@ -1,5 +1,6 @@
-function make_video(positions, phis, ts, params, skip, repeats, fname, plotPositions)
+function make_video(positions, phis, ts, params, skip, repeats, fname, plotPositions, axison)
     figh = clf;
+    set(gcf,'color','w');
     hold on
     if nargin < 5
         skip = 1;
@@ -12,6 +13,9 @@ function make_video(positions, phis, ts, params, skip, repeats, fname, plotPosit
     end
     if nargin < 8
         plotPositions = false;
+    end
+    if nargin < 9
+        axison = true;
     end
     v = VideoWriter(fname,'MPEG-4');
     v.FrameRate = 30;
@@ -36,6 +40,9 @@ function make_video(positions, phis, ts, params, skip, repeats, fname, plotPosit
         end
         xlim(xlims)
         ylim(ylims)
+        if not(axison)
+            axis off
+        end
         drawnow
         f = getframe(figh);
         writeVideo(v,f)
