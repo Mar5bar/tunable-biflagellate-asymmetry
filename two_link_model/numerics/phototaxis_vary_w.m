@@ -93,11 +93,11 @@ ylabel('$\kappa$','FontSize',font_size,'Interpreter','latex');
 set(gca,'TickLabelInterpreter','latex');   
 set(gca,'FontSize',font_size);
 
-fitfun = fittype(@(a,x) a * (x+1)./(x-1))
+fitfun = fittype(@(a,x) a * (x-1)./(x+1))
 [fitted_curve, gof] = fit(freqMultipliers', radii(1)./radii, fitfun, 'StartPoint', 1);
 a = coeffvalues(fitted_curve);
 
-plot(freqMultipliers,a*((freqMultipliers(1)+1)/(freqMultipliers(1)-1))*(freqMultipliers-1)./(freqMultipliers+1),'k:','LineWidth',1)
+plot(freqMultipliers,a*(freqMultipliers-1)./(freqMultipliers+1),'k:','LineWidth',1)
 ylim([0,15])
 grid on
 legend({'Simulation','Scaling law'},'location','southeast')
