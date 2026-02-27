@@ -38,7 +38,7 @@ From MATLAB, set the current folder to the repository root, then run scripts by 
 - Fits scaling law:
 
 $$
-\kappa = a\,\frac{k_L/k_R - 1}{k_L/k_R + 1}
+\kappa = a\frac{k_L/k_R - 1}{k_L/k_R + 1}
 $$
 
 - Plots mean curvature with error bars across repeated multipliers.
