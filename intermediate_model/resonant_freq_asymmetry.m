@@ -23,7 +23,7 @@ end
 
 plot(kRs, vals, 'LineWidth', 2, 'Color', 'black')
 plot(kRs, approxVals, 'LineWidth', 1, 'Color', 0.5*[1,1,1], 'LineStyle','-')
-legend({'$\beta \ll 1$', '$\beta = 0$'}, 'Interpreter', 'latex')
+legend({'$\beta \ll \alpha$', '$\beta = 0$'}, 'Interpreter', 'latex')
 xlim([min(kRs),max(kRs)])
 ylim([-9,7])
 axis square
