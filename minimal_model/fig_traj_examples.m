@@ -39,7 +39,7 @@ for i = 1:length(k_var)
 end
 
 % Second activation, more complex function.
-f = @(t) 1+0.05*sin(t)^2+0.1*sin(2.5*t); params.f = f;% periodic activation function
+f = @(t) 1+0.05*sin(2*t)+0.1*sin(4*t); params.f = f;% periodic activation function
 
 for i = 1:length(k_var)
     k_2 = k_var(i);params.k_2 = k_2;
@@ -73,7 +73,7 @@ grid on
 box on
 %xlabel('$\alpha$','FontSize',font_size,'Interpreter','latex');
     ylabel('$y$','FontSize',font_size,'Interpreter','latex');
-    title('$f(t) = 1 + 0.01 \sin(t)$','Interpreter','latex');
+    title('$f(t) = 1 + 0.02 \sin(t)$','Interpreter','latex');
     set(gca,'TickLabelInterpreter','latex');   
     set(gca,'FontSize',font_size);
     c = colorbar;
@@ -95,7 +95,7 @@ grid on
 box on
     xlabel('$x$','FontSize',font_size,'Interpreter','latex');
     ylabel('$y$','FontSize',font_size,'Interpreter','latex');
-    title('$f(t) = 1 + 0.05 \sin^2(t) + 0.1 \sin (2t)$','Interpreter','latex');
+    title('$f(t) = 1 + 0.05 \sin (t) + 0.1 \sin (2t)$','Interpreter','latex');
     set(gca,'TickLabelInterpreter','latex');   
     set(gca,'FontSize',font_size);
     yticks([-10 -5 0])

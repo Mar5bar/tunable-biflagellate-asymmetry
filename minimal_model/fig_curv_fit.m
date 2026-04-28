@@ -23,7 +23,7 @@ f_0 = 1;
 f_var{1} = @(t) f_0+0.02*sin(t);
 f_var{2} = @(t) f_0+0.05*sin(t);
 f_var{3} = @(t) f_0+0.1*sin(t);
-f_var{4} = @(t) f_0+0.1*sin(t)^2;
+f_var{4} = @(t) f_0+0.05*cos(2*t);
 f_var{5} = @(t) f_0+0.05*sin(2*t)+0.05*cos(3*t)+0.05*sin(4*t);
 
 % Variable frequency.
@@ -89,7 +89,7 @@ box on
                 '$f(t) = 1+0.02 \sin t$',...
                 '$f(t) = 1+0.05 \sin t$',...
                 '$f(t) = 1+0.1 \sin t$',...
-                '$f(t) = 1+0.1 \sin^2 t$',...
+                '$f(t) = 1+0.05 \cos (2t)$',...
                 '$f(t) = g(t) $');
      l.Location = "southeast";
      l.Interpreter = "latex";
