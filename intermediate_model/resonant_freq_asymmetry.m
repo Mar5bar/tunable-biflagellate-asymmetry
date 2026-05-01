@@ -14,7 +14,7 @@ kRs = linspace(1.1,3,1e3);
 vals = 0*kRs;
 approxVals = 0*kRs;
 
-K = @(t,k) sin(k*t);
+K = @(t,k) -cos(k*t);
 
 for i = 1 : length(kRs)
 	kR = kRs(i);
